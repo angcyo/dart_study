@@ -3,6 +3,8 @@ in `lib/`, and example unit test in `test/`.
 
 # `dart`
 
+https://dart.dev/tools/dart-tool
+
 ```shell
 dart --help
 A command-line utility for Dart development.
@@ -36,6 +38,8 @@ See https://dart.dev/tools/dart-tool for detailed documentation.
 
 ## `dart create`
 
+https://dart.dev/tools/dart-create
+
 ```shell
 dart create --help
 Create a new Dart project.
@@ -58,6 +62,10 @@ Run "dart help" to see global options.
 ```
 
 ## `dart compile`
+
+https://dart.dev/tools/dart-compile
+
+`dart compile exe bin/main.dart` `≈5MB`
 
 ```shell
 dart compile --help

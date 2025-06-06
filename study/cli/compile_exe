@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Turn off echo
+set +x
+
+mkdir ../../.output
+
+# dart compile exe bin/dart_cli.dart # 会输出 dart_cli.exe 文件 ≈5MB
+dart compile exe bin/dart_cli.dart -o ../../.output/dart_cli
