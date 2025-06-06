@@ -7,4 +7,5 @@ environment:
 
 workspace:
   - study/cli
+  - study/empty
   - dart_packages/dp_basis

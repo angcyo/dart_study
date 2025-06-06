@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Turn off echo
+set +x
+
+mkdir ../../.output
+
+dart compile exe bin/empty.dart -o ../../.output/empty
