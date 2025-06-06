@@ -1,18 +1,10 @@
 name: dart_study
-description: A sample command-line application with basic argument parsing.
-version: 0.0.1
+publish_to: none
 repository: https://github.com/angcyo/dart_study
 
 environment:
   sdk: ^3.8.1
 
-# Add regular dependencies here.
-dependencies:
-  # https://pub.dev/packages/args
-  args: ^2.7.0
-
-dev_dependencies:
-  # https://pub.dev/packages/lints
-  lints: ^6.0.0
-  # https://pub.dev/packages/test
-  test: ^1.26.2
+workspace:
+  - study/cli
+  - dart_packages/dp_basis

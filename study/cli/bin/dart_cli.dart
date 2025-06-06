@@ -1,4 +1,5 @@
 import 'package:args/args.dart';
+import 'package:dp_basis/dp_basis.dart';
 
 const String version = '0.0.1';
 
@@ -25,6 +26,10 @@ void printUsage(ArgParser argParser) {
 }
 
 void main(List<String> arguments) {
+  print(currentPath);
+  print(currentPath2);
+  print(currentFileName);
+
   final ArgParser argParser = buildParser();
   try {
     final ArgResults results = argParser.parse(arguments);
