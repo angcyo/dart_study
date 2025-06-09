@@ -13,6 +13,11 @@ dependencies:
   dp_basis:
     path: ../../dart_packages/dp_basis
   # path: ^1.8.0
+
+  # https://pub.dev/packages/dartcv4
+  # https://github.com/rainyl/opencv_dart/tree/main/packages/dartcv
+  #
+  # https://github.com/rainyl/opencv_dart
   dartcv4: ^1.1.4
 
 dev_dependencies:

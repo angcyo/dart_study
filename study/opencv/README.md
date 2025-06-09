@@ -1,9 +1,16 @@
 A sample command-line application with an entrypoint in `bin/`, library code
 in `lib/`, and example unit test in `test/`.
 
+# OpenCV – 4.11.0 `2025-02-18`
+
+https://opencv.org/releases/
+
 # dartcv4: ^1.1.4
 
 https://pub.dev/packages/dartcv4
+
+- 1.1.0
+    - update to OpenCV 4.11.0
 
 # 使用记录
 
