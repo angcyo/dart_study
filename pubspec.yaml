@@ -6,6 +6,7 @@ environment:
   sdk: ^3.8.1
 
 workspace:
+  - dart_packages/dp_basis
   - study/cli
   - study/empty
-  - dart_packages/dp_basis
+  - study/opencv

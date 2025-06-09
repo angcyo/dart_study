@@ -1,0 +1,20 @@
+name: opencv
+description: A sample command-line application.
+version: 1.0.0
+# repository: https://github.com/my_org/my_repo
+
+resolution: workspace
+
+environment:
+  sdk: ^3.8.1
+
+# Add regular dependencies here.
+dependencies:
+  dp_basis:
+    path: ../../dart_packages/dp_basis
+  # path: ^1.8.0
+  dartcv4: ^1.1.4
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.26.2

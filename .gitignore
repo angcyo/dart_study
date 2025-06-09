@@ -34,3 +34,4 @@ doc/api/
 *.iml
 dart_packages
 .output
+.dartcv
