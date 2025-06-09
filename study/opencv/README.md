@@ -8,9 +8,14 @@ https://opencv.org/releases/
 # dartcv4: ^1.1.4
 
 https://pub.dev/packages/dartcv4
+https://github.com/rainyl/dartcv
 
 - 1.1.0
     - update to OpenCV 4.11.0
+
+## 下载对应的链接库
+
+https://github.com/rainyl/dartcv/releases
 
 # 使用记录
 
@@ -36,3 +41,13 @@ Invalid argument(s): Failed to lookup symbol 'cv_Mat_create': dlsym(RTLD_DEFAULT
 ```
 `DYLD_LIBRARY_PATH` -> `~/xxx/dart_study/.dartcv/lib`
 ```
+
+# opencv_dart: ^1.4.1
+
+https://pub.dev/packages/opencv_dart
+https://github.com/rainyl/opencv_dart
+
+# opencv_core: ^1.4.1
+
+https://pub.dev/packages/opencv_core
+https://github.com/rainyl/opencv_dart/tree/main/packages/opencv_core
