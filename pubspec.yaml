@@ -9,4 +9,5 @@ workspace:
   - dart_packages/dp_basis
   - study/cli
   - study/empty
+  - study/eval
   - study/opencv
