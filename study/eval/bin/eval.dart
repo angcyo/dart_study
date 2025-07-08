@@ -13,7 +13,9 @@ import 'package:dp_basis/dp_basis.dart';
 void main(List<String> arguments) async {
   print('Hello world!');
   await wrapMeasureTime(() {
-    print(eval('2 + 2')); // -> 4
+    print(
+      eval('package:eval/eval.dart;\nprint(TestObject("angcyo").name);', plugins: [TestObjectPlugin()]),
+    ); // -> 4
   });
 }
 
@@ -39,6 +41,29 @@ class $TestObject implements $Instance {
     'package:eval/eval.dart',
     'TestObject',
   ).ref;
+
+  /// Again, we map out all the fields and methods for the compiler.
+  static final $declaration = BridgeClassDef(
+    BridgeClassType($type, isAbstract: true),
+    constructors: {
+      // Even though this class is abstract, we currently need to define
+      // the default constructor anyway.
+      '': BridgeFunctionDef(
+        returns: $type.annotate,
+        params: [
+          BridgeParameter(
+            'name',
+            BridgeTypeAnnotation(
+              BridgeTypeRef(CoreTypes.string),
+              nullable: false,
+            ),
+            true,
+          ),
+        ],
+      ).asConstructor,
+    },
+    bridge: true,
+  );
 
   //--
   /// Create a constructor that wraps the Book class
@@ -69,4 +94,21 @@ class $TestObject implements $Instance {
     debugger();
     return $Object(this).$setProperty(runtime, identifier, value);
   }
+}
+
+///
+class TestObjectPlugin implements EvalPlugin {
+  @override
+  void configureForCompile(BridgeDeclarationRegistry registry) {
+    debugger();
+    registry.defineBridgeClass($TestObject.$declaration);
+  }
+
+  @override
+  void configureForRuntime(Runtime runtime) {
+    debugger();
+  }
+
+  @override
+  String get identifier => "package:eval";
 }
