@@ -14,7 +14,7 @@ void main(List<String> arguments) async {
   print('Hello world!');
   await wrapMeasureTime(() {
     print(
-      eval('package:eval/eval.dart;\nprint(TestObject("angcyo").name);', plugins: [TestObjectPlugin()]),
+      eval('print(testObject.name);', plugins: [TestObjectPlugin()]),
     ); // -> 4
   });
 }
@@ -110,5 +110,5 @@ class TestObjectPlugin implements EvalPlugin {
   }
 
   @override
-  String get identifier => "package:eval";
+  String get identifier => "testObject";
 }
