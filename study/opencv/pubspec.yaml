@@ -1,6 +1,7 @@
 name: opencv
 description: A sample command-line application.
 version: 1.0.0
+publish_to: none
 # repository: https://github.com/my_org/my_repo
 
 resolution: workspace
@@ -18,7 +19,7 @@ dependencies:
   # https://github.com/rainyl/opencv_dart/tree/main/packages/dartcv
   #
   # https://github.com/rainyl/opencv_dart
-  dartcv4: ^1.1.4
+  dartcv4: ^1.1.8
 
 dev_dependencies:
   lints: ^6.0.0

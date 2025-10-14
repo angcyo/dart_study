@@ -40,7 +40,11 @@ Invalid argument(s): Failed to lookup symbol 'cv_Mat_create': dlsym(RTLD_DEFAULT
 
 ```
 `DYLD_LIBRARY_PATH` -> `~/xxx/dart_study/.dartcv/lib`
+
+`/Users/angcyo/project/flutter/dart_study/.dartcv/lib`
 ```
+
+直接放在: `~/.dartcv` 这个目录会没有权限.
 
 # opencv_dart: ^1.4.1
 

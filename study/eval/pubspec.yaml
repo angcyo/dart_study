@@ -11,10 +11,12 @@ environment:
 # Add regular dependencies here.
 dependencies:
   # cli
+
   # https://pub.dev/packages/args
   # args: ^2.7.0
+
   # https://pub.dev/packages/dart_eval
-  dart_eval: ^0.7.11
+  dart_eval: ^0.8.2
   dp_basis:
     path: ../../dart_packages/dp_basis
 

@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="opencv.dart" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application" nameIsGenerated="true">
+    <option name="envs">
+      <entry key="DYLD_FALLBACK_LIBRARY_PATH" value="$PROJECT_DIR$/.dartcv/lib" />
+      <entry key="DYLD_LIBRARY_PATH" value="$PROJECT_DIR$/.dartcv/lib:~/.dartcv/lib:$DYLD_LIBRARY_PATH" />
+    </option>
+    <option name="filePath" value="$PROJECT_DIR$/study/opencv/bin/opencv.dart" />
+    <option name="workingDirectory" value="$PROJECT_DIR$/study/opencv" />
+    <method v="2" />
+  </configuration>
+</component>
