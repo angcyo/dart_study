@@ -29,3 +29,17 @@ https://pub.dev/packages/opencv_core
 ## awesome-opencv_dart 示例
 
 https://github.com/rainyl/awesome-opencv_dart
+
+## OpenCV 调用onnx模型
+
+https://www.zywvvd.com/notes/study/image-processing/opencv/opencv-onnx/opencv-onnx/
+
+支持模型种类：
+
+- Caffe
+- Onnx
+- Tensorflow
+- Pytorch
+- DarkNet
+- TFLite
+- ModelOptimizer

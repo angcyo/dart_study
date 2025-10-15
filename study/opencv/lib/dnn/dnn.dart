@@ -44,6 +44,7 @@ Future<void> loadModel() async {
   }
 }
 
+/// [cv.blobFromImage]
 /// https://docs.opencv.org/4.x/d6/d0f/group__dnn.html#ga29f34df9376379a603acd8df581ac8d7
 Future<int> predict(cv.Mat img) async {
   await loadModel();
@@ -59,6 +60,7 @@ Future<int> predict(cv.Mat img) async {
   await _model!.setInputAsync(blob);
   final logits = await _model!.forwardAsync();
   print("logits: ${logits.toFmtString()}");
+  //cvSaveMat("../../.output/output_logits.png", logits);
   final (minVal, maxVal, minLoc, maxLoc) = await cv.minMaxLocAsync(logits);
   print("minVal: $minVal, minLoc: $minLoc");
   print("maxVal: $maxVal, maxLoc: $maxLoc");

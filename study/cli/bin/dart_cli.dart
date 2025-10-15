@@ -32,7 +32,7 @@ void printUsage(ArgParser argParser) {
 
 void main(List<String> arguments) {
   print(currentPath);
-  print(currentPath2);
+  print(currentFilePath);
   print(currentFileName);
 
   final ArgParser argParser = buildParser();

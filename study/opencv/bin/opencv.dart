@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:dartcv4/dartcv.dart' as cv;
 import 'package:dp_basis/dp_basis.dart';
 import 'package:opencv/dnn/dnn.dart';
-import 'package:opencv/opencv.dart' as opencv;
+import 'package:opencv/opencv.dart';
 
 ///
 /// @author <a href="mailto:angcyo@126.com">angcyo</a>
@@ -12,28 +12,40 @@ import 'package:opencv/opencv.dart' as opencv;
 
 void main() async {
   print(currentPath);
-  print(currentPath2);
+  print(currentFilePath);
   print(currentFileName);
 
   //print('Hello world: ${opencv.calculate()}!');
 
   //读取图片
-  final img = cv.imread("../../tests/FaceQ.png", flags: cv.IMREAD_COLOR);
+  final img = cv.imread("FaceQ.png".inputPath, flags: cv.IMREAD_COLOR);
   //图片颜色空间转换
   final gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY);
-  print("${img.rows}, ${img.cols}");
+  fgPrint("$img width:${img.width}, height:${img.height}");
 
   //保存图片
-  cv.imwrite("../../.output/test_cvtcolor.png", gray);
+  cv.imwrite("test_cvtcolor.png".outputPath, gray);
 
   //testCanny(img);
-  await testDnn();
+  //await testDnn();
+  //testDraw();
+  testStitch();
 }
+
+extension TestStringEx on String {
+  /// 当前文件名的输入路径
+  String get inputPath => "../../tests/$this";
+
+  /// 当前文件名的输出路径
+  String get outputPath => "../../.output/$this";
+}
+
+//--
 
 /// 测试图片形状
 void testCanny(cv.Mat image) {
   final mat = cv.canny(image, 120, 120);
-  cv.imwrite("../../.output/test_output.png", mat);
+  cv.imwrite("test_output.png".outputPath, mat);
   final (contours, hierarchy) = cv.findContours(
     mat,
     cv.RETR_EXTERNAL,
@@ -48,4 +60,67 @@ void testCanny(cv.Mat image) {
     debugger();
   }
   debugger();
+}
+
+/// 测试在图片上绘制元素
+void testDraw() {
+  // final mat = cvLoadMat("FaceQ.png".inputPath);
+  final mat = cvLoadMat("test2.png".inputPath);
+  final bytes = mat.data;
+  final type = mat.type;
+
+  /*final bMat = cvThresholdMat(
+    cvLoadMat("FaceQ.png".inputPath, flags: cv.IMREAD_GRAYSCALE),
+    120,
+    maxVal: 200
+  );
+  cvSaveMat("output_b.png".outputPath, bMat);
+  openFile("output_b.png".outputPath);*/
+
+  final testMat = cvFilterMat(mat, 5);
+  cvSaveMat("output.png".outputPath, testMat);
+  openFile("output.png".outputPath);
+
+  /*debugger();
+  mat.forEachPixel((row, col, pixel) {
+    debugger(when: pixel.any((num) => num != 0));
+  });*/
+
+  final thickness = 1;
+
+  //绘制矩形
+  cv.rectangle(
+    mat,
+    cv.Rect(10, 10, 20, 20),
+    cv.Scalar.red,
+    thickness: thickness,
+  );
+  //绘制圆形
+  cv.circle(mat, cv.Point(30, 30), 10, cv.Scalar.red, thickness: thickness);
+  //绘制文字, 不支持中文 emoji
+  cv.putText(
+    mat,
+    "angcyo 中国人 😌",
+    cv.Point(30, 30),
+    cv.FONT_HERSHEY_SIMPLEX,
+    1,
+    cv.Scalar.red,
+  );
+  cvSaveMat("output_draw.png".outputPath, mat);
+  openFile("output_draw.png".outputPath);
+}
+
+/// 测试图片拼接
+void testStitch() {
+  final images = <cv.Mat>[];
+  for (final name in assetImgs) {
+    images.add(cvLoadMat(name));
+    if (images.length >= 6) {
+      break;
+    }
+  }
+  //debugger();
+  final output = cvStitchMat(images);
+  cvSaveMat("output_stitch.png".outputPath, output);
+  openFile("output_stitch.png".outputPath);
 }
