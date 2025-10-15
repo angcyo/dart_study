@@ -24,3 +24,7 @@ dependencies:
 dev_dependencies:
   lints: ^6.0.0
   test: ^1.26.2
+
+# assets 目录
+assets:
+  - assets/example.txt
