@@ -11,6 +11,17 @@ import 'package:dp_basis/dp_basis.dart';
 /// - [cv.MatType.CV_8UC3] BGR
 /// - [cv.MatType.CV_8UC4] BGRA
 
+/// Otsu算法, 获取图片的阈值
+double cvOtsu(cv.InputArray src) {
+  final (threshold, _) = cv.threshold(
+    src,
+    0,
+    255,
+    cv.THRESH_BINARY + cv.THRESH_OTSU,
+  );
+  return threshold;
+}
+
 /// 从路径中读取图片Mat
 /// - [filePath] 必须要是绝对路径, 否则会报错
 /// - [flags]
