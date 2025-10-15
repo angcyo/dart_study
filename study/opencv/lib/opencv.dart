@@ -33,11 +33,32 @@ Uint8List? cvImgEncodeMat(cv.InputArray img, {String ext = ".png"}) {
 }
 
 /// 颜色空间转换
-/// - [cv.COLOR_BGR2RGBA] 转成RGBA
-/// - [cv.COLOR_BGR2GRAY] 转成灰度
-/// - [cv.COLOR_BGR2HSV] 转成HSV
-/// - [cv.COLOR_BGR2HLS] 转成HLS
+/// - [code]
+///   - [cv.COLOR_BGR2RGBA] 转成RGBA
+///   - [cv.COLOR_BGR2GRAY] 转成灰度
+///   - [cv.COLOR_BGR2HSV] 转成HSV
+///   - [cv.COLOR_BGR2HLS] 转成HLS
 cv.Mat cvCvtColorMat(cv.InputArray src, int code, {cv.OutputArray? dst}) {
+  return cv.cvtColor(src, code, dst: dst);
+}
+
+/// 灰度化
+///
+/// - [cvCvtColorMat]
+cv.Mat cvGrayMat(
+  cv.InputArray src, {
+  int code = cv.COLOR_BGR2GRAY,
+  cv.OutputArray? dst,
+}) {
+  return cv.cvtColor(src, code, dst: dst);
+}
+
+/// 灰色化的图片转成彩色空间
+cv.Mat cvColorMat(
+  cv.InputArray src, {
+  int code = cv.COLOR_GRAY2BGR,
+  cv.OutputArray? dst,
+}) {
   return cv.cvtColor(src, code, dst: dst);
 }
 
@@ -49,11 +70,12 @@ cv.Mat cvCvtColorMat(cv.InputArray src, int code, {cv.OutputArray? dst}) {
 /// - [maxVal] 限制数值的最大值
 /// https:///docs.opencv.org/3.3.0/d7/d1b/group__imgproc__misc.html#gae8a4a146d1ca78c626a53577199e9c57
 cv.Mat cvThresholdMat(
-  cv.InputArray src,
-  double threshold, {
+  cv.InputArray src, {
+  double threshold = 127,
   double maxVal = 255,
   int type = cv.THRESH_BINARY,
 }) {
+  //cv.THRESH_BINARY + cv.THRESH_OTSU
   final (_, dst) = cv.threshold(src, threshold, maxVal, type);
   //debugger();
   return dst;

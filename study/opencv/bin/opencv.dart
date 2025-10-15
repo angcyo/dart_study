@@ -1,8 +1,8 @@
-import 'dart:developer';
-
 import 'package:dartcv4/dartcv.dart' as cv;
 import 'package:dp_basis/dp_basis.dart';
+import 'package:opencv/canny/canny.dart';
 import 'package:opencv/dnn/dnn.dart';
+import 'package:opencv/lib.dart';
 import 'package:opencv/opencv.dart';
 
 ///
@@ -24,43 +24,15 @@ void main() async {
   fgPrint("$img width:${img.width}, height:${img.height}");
 
   //保存图片
-  cv.imwrite("test_cvtcolor.png".outputPath, gray);
+  //cv.imwrite("test_cvtcolor.png".outputPath, gray);
 
-  //testCanny(img);
+  testCanny(img);
   //await testDnn();
   //testDraw();
-  testStitch();
-}
-
-extension TestStringEx on String {
-  /// 当前文件名的输入路径
-  String get inputPath => "../../tests/$this";
-
-  /// 当前文件名的输出路径
-  String get outputPath => "../../.output/$this";
+  //testStitch();
 }
 
 //--
-
-/// 测试图片形状
-void testCanny(cv.Mat image) {
-  final mat = cv.canny(image, 120, 120);
-  cv.imwrite("test_output.png".outputPath, mat);
-  final (contours, hierarchy) = cv.findContours(
-    mat,
-    cv.RETR_EXTERNAL,
-    cv.CHAIN_APPROX_SIMPLE,
-  );
-  for (final contour in contours) {
-    final approx = cv.approxPolyDP(
-      contour,
-      0.04 * cv.arcLength(contour, true),
-      true,
-    );
-    debugger();
-  }
-  debugger();
-}
 
 /// 测试在图片上绘制元素
 void testDraw() {
