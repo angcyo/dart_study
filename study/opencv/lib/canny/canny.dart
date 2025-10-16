@@ -28,10 +28,28 @@ void testCanny(cv.Mat image) {
   openFile("output_canny_binary.png".outputPath);
 
   //4: 边缘检测
+  //threshold1: 任何梯度值低于 threshold1 的像素被认为是“非边缘”，会被丢弃。
+  // 设置较低时，会检测到更多的边缘（可能包括噪声）；设置较高时，部分较弱的边缘会被忽略。
+  //threshold2: 任何梯度值高于 threshold2 的像素被认为是“强边缘”。
+  // 设置较高时，只能检测到很明显的边缘；设置较低时，边缘检测会更“敏感”，可能导致虚假边缘。
+  //两个阈值的比例通常设为 1:2 或 1:3。
+  //edges1 = cv.canny(img, 50, 150)   # 常用，边缘较平衡
+  //edges2 = cv.canny(img, 100, 200)  # 较高，边缘较少更明显
+  //edges3 = cv.canny(img, 10, 80)    # 较低，边缘多但易有噪点
   final cannyMat = cv.canny(binaryMat, 50, 150);
   cvSaveMat("output_canny_canny.png".outputPath, cannyMat);
   openFile("output_canny_canny.png".outputPath);
 
+  //https://blog.csdn.net/qq_36758914/article/details/104007478
+  //mode: 轮廓检索模式
+  //cv.RETR_EXTERNAL ：只检索最外面的轮廓；
+  //cv.RETR_LIST：检索所有的轮廓，并将其保存到一条链表当中；
+  //cv.RETR_CCOMP：检索所有的轮廓，并将他们组织为两层：顶层是各部分的外部边界，第二层是空洞的边界;
+  //cv.RETR_TREE（最常用）：检索所有的轮廓，并重构嵌套轮廓的整个层次;
+  //
+  //method: 轮廓逼近方法
+  //cv.CHAIN_APPROX_NONE：以Freeman链码的方式输出轮廓，所有其他方法输出多边形（顶点的序列）。
+  //cv.CHAIN_APPROX_SIMPLE（最常用）:压缩水平的、垂直的和斜的部分，也就是，函数只保留他们的终点部分。
   final (contours, hierarchy) = cv.findContours(
     cannyMat,
     cv.RETR_EXTERNAL,
@@ -65,7 +83,7 @@ void testCanny(cv.Mat image) {
     approxMat = cv.drawContours(
       approxMat,
       cv.VecVecPoint.fromVecPoint(approx),
-      0,
+      -1 /*-1表示绘制所有轮廓, 0表示绘制第一条轮廓*/,
       cv.Scalar.red,
       thickness: 1,
       maxLevel: 0xffffffff,

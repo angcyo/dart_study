@@ -134,6 +134,7 @@ cv.Mat cvThresholdMat(
 /// - [cv.dft] 快速傅里叶变换. 快速傅里叶变换是一种用于处理图像的快速变换算法，可以计算图像的频谱。
 /// - [cv.idft] 快速傅里叶逆变换. 快速傅里叶逆变换是一种用于处理图像的快速变换算法，可以计算图像的时域信号。
 /// - [cv.morphologyEx] 形态学处理. 形态学处理是一种用于处理图像的滤波算法，可以进行图像的开、闭、腐蚀、膨胀、形态学梯度、顶帽和黑帽等操作。
+///   - https://blog.csdn.net/qq_39507748/article/details/104539673
 ///
 /// ## Depth combinations
 /// https://docs.opencv.org/4.x/d4/d86/group__imgproc__filter.html#filter_depths

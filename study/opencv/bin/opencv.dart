@@ -22,6 +22,8 @@ void main() async {
   final gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY);
   fgPrint("$img width:${img.width}, height:${img.height}");
 
+  //cv.imshow("test", img);
+
   //保存图片
   //cv.imwrite("test_cvtcolor.png".outputPath, gray);
 

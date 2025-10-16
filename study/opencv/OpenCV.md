@@ -2,6 +2,10 @@
 
 https://docs.opencv.org/4.x/index.html
 
+## OpenCV Python Tutorials
+
+https://opencv-python-tutorials.readthedocs.io/zh/latest/
+
 ## dartcv
 
 Dart 语言的 OpenCV 绑定。
