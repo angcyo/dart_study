@@ -7,11 +7,14 @@ import 'package:dp_basis/dp_basis.dart';
 /// @author <a href="mailto:angcyo@126.com">angcyo</a>
 /// @date 2025/06/09
 ///
+/// https://opencv-python-tutorials.readthedocs.io/zh/latest/
+///
 /// Opencv 默认的颜色通道排序是 BGR
 /// - [cv.MatType.CV_8UC3] BGR
 /// - [cv.MatType.CV_8UC4] BGRA
 
 /// Otsu算法, 获取图片的阈值
+/// - [cvThresholdMat]
 double cvOtsu(cv.InputArray src) {
   final (threshold, _) = cv.threshold(
     src,
@@ -77,7 +80,11 @@ Uint8List? cvImgEncodeMat(cv.InputArray img, {String ext = ".png"}) {
 ///   - [cv.COLOR_BGR2GRAY] 转成灰度
 ///   - [cv.COLOR_BGR2HSV] 转成HSV
 ///   - [cv.COLOR_BGR2HLS] 转成HLS
-cv.Mat cvCvtColorMat(cv.InputArray src, int code, {cv.OutputArray? dst}) {
+cv.Mat cvCvtColorMat(
+  cv.InputArray src, {
+  int code = cv.COLOR_BGR2RGBA,
+  cv.OutputArray? dst,
+}) {
   return cv.cvtColor(src, code, dst: dst);
 }
 
@@ -101,6 +108,33 @@ cv.Mat cvColorMat(
   return cv.cvtColor(src, code, dst: dst);
 }
 
+/// 获取B通道的图片
+cv.Mat cvGetBMat(cv.InputArray img) {
+  final bgrMat = cv.split(img);
+  final b = bgrMat[0];
+  final g = cv.Mat.zeros(b.rows, b.cols, b.type);
+  final r = cv.Mat.zeros(b.rows, b.cols, b.type);
+  return cv.merge(cv.VecMat.fromList([b, g, r]));
+}
+
+/// 获取G通道的图片
+cv.Mat cvGetGMat(cv.InputArray img) {
+  final bgrMat = cv.split(img);
+  final g = bgrMat[1];
+  final b = cv.Mat.zeros(g.rows, g.cols, g.type);
+  final r = cv.Mat.zeros(g.rows, g.cols, g.type);
+  return cv.merge(cv.VecMat.fromList([b, g, r]));
+}
+
+/// 获取R通道的图片
+cv.Mat cvGetRMat(cv.InputArray img) {
+  final bgrMat = cv.split(img);
+  final r = bgrMat[2];
+  final b = cv.Mat.zeros(r.rows, r.cols, r.type);
+  final g = cv.Mat.zeros(r.rows, r.cols, r.type);
+  return cv.merge(cv.VecMat.fromList([b, g, r]));
+}
+
 /// 二值化图片
 /// - [src] 源图片, 建议已经灰度化了. 否则二值化的输出结果可能有问题
 /// - [threshold] 阈值,
@@ -108,6 +142,8 @@ cv.Mat cvColorMat(
 ///   - [cv.THRESH_BINARY_INV] 与[cv.THRESH_BINARY] 相反
 /// - [maxVal] 限制数值的最大值
 /// https:///docs.opencv.org/3.3.0/d7/d1b/group__imgproc__misc.html#gae8a4a146d1ca78c626a53577199e9c57
+///
+/// - [cvOtsu]
 cv.Mat cvThresholdMat(
   cv.InputArray src, {
   double threshold = 127,
@@ -115,14 +151,36 @@ cv.Mat cvThresholdMat(
   int type = cv.THRESH_BINARY,
 }) {
   //cv.THRESH_BINARY + cv.THRESH_OTSU
-  final (_, dst) = cv.threshold(src, threshold, maxVal, type);
+  final (reThreshold, dst) = cv.threshold(src, threshold, maxVal, type);
   //debugger();
   return dst;
+}
+
+/// 自适应二值化
+/// - [cv.ADAPTIVE_THRESH_MEAN_C]：阈值是邻域的平均值。
+/// - [cv.ADAPTIVE_THRESH_GAUSSIAN_C]：阈值是邻域值的加权和，其中权重是高斯窗口。
+cv.Mat cvAdaptiveThresholdMat(
+  cv.InputArray src, {
+  double maxValue = 255,
+  int adaptiveMethod = cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+  int thresholdType = cv.THRESH_BINARY,
+  int size = 11,
+  double c = 2, //它只是从计算的平均值或加权平均值中减去的常数。
+}) {
+  return cv.adaptiveThreshold(
+    src,
+    maxValue,
+    adaptiveMethod,
+    thresholdType,
+    size,
+    c,
+  );
 }
 
 /// 滤波处理, 降噪. 可以消除噪点.  但是会模糊边缘.
 /// - [cv.blur] 平均滤波/均值滤波. 均值滤波是一种通过替换每个像素值为邻域像素的平均值来减少图像中噪声的方法。
 /// - [cv.gaussianBlur] 高斯滤波. 高斯滤波通过使用高斯函数加权邻域像素值，可以更有效地减少噪声。
+///   - [cv.getGaussianKernel] 创建高斯卷积核
 /// - [cv.medianBlur] 中值滤波. 中值滤波替换每个像素值为邻域像素的中位数，适用于去除椒盐噪声。
 /// - [cv.bilateralFilter] 双边滤波. 双边滤波是同时考虑空间距离和强度差异的滤波器，可以更好地保留边缘。
 /// - [cv.filter2D] 自定义滤波器
@@ -169,6 +227,42 @@ cv.Mat cvFilterMat(cv.InputArray src, int size) {
     [1, 1, -1],*/ /*
   ], cv.MatType.CV_8UC1);
   return cv.filter2D(src, -1, kernel);*/
+}
+
+/// 学习不同的形态学操作，如侵蚀，膨胀，开放，关闭等
+/// 学习不同的函数，如：cv.erode()，cv.dilate()，cv.morphologyEx()等
+///
+/// - [cv.erode] 侵蚀操作
+/// - [cv.dilate] 膨胀操作
+/// - [cv.morphologyEx] 形态学操作
+///  - [cv.MORPH_OPEN] 开操作
+///  - [cv.MORPH_CLOSE] 闭操作
+///  - [cv.MORPH_GRADIENT] 形态学梯度
+///  - [cv.MORPH_TOPHAT] 礼帽
+///  - [cv.MORPH_BLACKHAT] 黑帽
+///
+/// - [cv.getStructuringElement] 创建结构元素, 获得所需的卷积核。
+///
+/// https://opencv-python-tutorials.readthedocs.io/zh/latest/4.%20OpenCV%E4%B8%AD%E7%9A%84%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/4.5.%20%E5%BD%A2%E6%80%81%E5%8F%98%E6%8D%A2/
+cv.Mat cvMorphologyMat(
+  cv.InputArray src,
+  cv.Mat kernel, {
+  int operation = cv.MORPH_OPEN,
+}) {
+  //final kernel = cv.getStructuringElement(cv.MORPH_RECT, (size, size));
+  return cv.morphologyEx(src, operation, kernel);
+}
+
+/// 查找图像梯度，边缘等
+/// 学习函数：cv.Sobel()，cv.Scharr()，cv.Laplacian()
+///
+/// - [cv.sobel] Sobel算子是高斯联合平滑加微分运算，因此它更能抵抗噪声。
+/// - [cv.scharr]
+/// - [cv.laplacian] 它的计算由关系给出的图像的拉普拉斯（Laplacian）算子
+///
+cv.Mat cvFindGradientMat(cv.InputArray src, {int size = 5}) {
+  return cv.sobel(src, -1, 1, 0, ksize: size);
+  //return cv.Laplacian(src, -1);
 }
 
 /// 存储图片到指定路径

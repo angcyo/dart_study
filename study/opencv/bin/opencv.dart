@@ -15,14 +15,27 @@ void main() async {
   print(currentFileName);
 
   final tick1 = cv.getTickCount();
-  bgPrint('Hello Opencv:${cv.openCvVersion()} / ${cv.getNumThreads()}');
+  bgPrint(
+    'Hello Opencv:${cv.openCvVersion()} / ${cv.getNumThreads()} / ${cv.getTickCount()}',
+  );
 
   //读取图片
   final img = cv.imread("FaceQ.png".inputPath, flags: cv.IMREAD_COLOR);
+  cvSaveMat("output_raw.png".outputPath, img);
+  openFile("output_raw.png".outputPath);
+
+  cvSaveMat("output_b.png".outputPath, cvGetBMat(img));
+  openFile("output_b.png".outputPath);
+  cvSaveMat("output_g.png".outputPath, cvGetGMat(img));
+  openFile("output_g.png".outputPath);
+  cvSaveMat("output_r.png".outputPath, cvGetRMat(img));
+  openFile("output_r.png".outputPath);
+
   //图片颜色空间转换
   final gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY);
   fgPrint("$img width:${img.width}, height:${img.height}");
 
+  //分离图片通道
   //cv.split(m);
   //cv.merge(m);
   //cv.imshow("test", img);
