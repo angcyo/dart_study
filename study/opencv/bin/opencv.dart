@@ -1,6 +1,5 @@
 import 'package:dartcv4/dartcv.dart' as cv;
 import 'package:dp_basis/dp_basis.dart';
-import 'package:opencv/canny/canny.dart';
 import 'package:opencv/dnn/dnn.dart';
 import 'package:opencv/lib.dart';
 import 'package:opencv/opencv.dart';
@@ -26,10 +25,11 @@ void main() async {
   //保存图片
   //cv.imwrite("test_cvtcolor.png".outputPath, gray);
 
-  testCanny(img);
+  //testCanny(img);
   //await testDnn();
   //testDraw();
   //testStitch();
+  testPerspective();
 }
 
 //--
@@ -95,4 +95,27 @@ void testStitch() {
   final output = cvStitchMat(images);
   cvSaveMat("output_stitch.png".outputPath, output);
   openFile("output_stitch.png".outputPath);
+}
+
+/// 测试透视变换
+void testPerspective() {
+  final mat = cvPerspectiveTransform2f(
+    [
+      cv.Point2f(13, 13),
+      cv.Point2f(166.5, 18.5),
+      cv.Point2f(163, 163.5),
+      cv.Point2f(10.5, 160.5),
+    ],
+    [
+      cv.Point2f(20, 20),
+      cv.Point2f(160, 20),
+      cv.Point2f(160, 160),
+      cv.Point2f(20, 160),
+    ],
+  );
+  //[[0.8922067941243021, 0.014188208530941089, 8.176286297216732],
+  // [-0.03583605628807173, 0.9391478601047357, 8.216367882118266],
+  // [-0.00010755186200365007, -0.000048519939015975823, 1.0]]
+  fgPrint("$mat ${mat.toList()}");
+  fgPrint("${mat.matrix3}");
 }

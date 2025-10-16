@@ -22,6 +22,34 @@ double cvOtsu(cv.InputArray src) {
   return threshold;
 }
 
+/// 透视变换. 左上、右上、右下、左下
+/// - [srcPoints] 原4个角的坐标
+/// - [dstPoints] 变换后4个角的坐标
+/// https:///docs.opencv.org/master/da/d54/group__imgproc__transform.html#ga8c1ae0e3589a9d77fffc962c49b22043
+///
+/// - [cv.warpPerspective] 透视变换作用到图片
+///
+cv.Mat cvPerspectiveTransform(
+  List<cv.Point> srcPoints,
+  List<cv.Point> dstPoints,
+) {
+  return cv.getPerspectiveTransform(
+    cv.VecPoint.fromList(srcPoints),
+    cv.VecPoint.fromList(dstPoints),
+  );
+}
+
+/// 浮点数值
+cv.Mat cvPerspectiveTransform2f(
+  List<cv.Point2f> srcPoints,
+  List<cv.Point2f> dstPoints,
+) {
+  return cv.getPerspectiveTransform2f(
+    cv.VecPoint2f.fromList(srcPoints),
+    cv.VecPoint2f.fromList(dstPoints),
+  );
+}
+
 /// 从路径中读取图片Mat
 /// - [filePath] 必须要是绝对路径, 否则会报错
 /// - [flags]
@@ -202,4 +230,39 @@ cv.Mat? cvStitchMat(List<cv.InputArray> images) {
     fgPrint("需要更多图片", 196);
   }
   return status == cv.StitcherStatus.OK ? dst : null;
+}
+
+/// Mat扩展
+extension MatEx on cv.Mat {
+  /// 获取图片的宽高
+  (int width, int height) get size {
+    return (width, height);
+  }
+
+  /// 获取对应的3*3矩阵
+  ///
+  /// ## 可视化输出的数据
+  ///
+  /// ```
+  /// [[0.8922067941243021, 0.014188208530941089, 8.176286297216732],
+  /// [-0.03583605628807173, 0.9391478601047357, 8.216367882118266],
+  /// [-0.00010755186200365007, -0.000048519939015975823, 1.0]]
+  /// ```
+  ///
+  /// ## 实际在一维数组中是
+  ///
+  /// ```
+  /// [0.8922067941243021, -0.03583605628807173, -0.00010755186200365007,
+  /// 0.014188208530941089, 0.9391478601047357, -0.000048519939015975823,
+  /// 8.176286297216732, 8.216367882118266, 1.0]
+  /// ```
+  List<double> get matrix3 {
+    final matrix3 = List<double>.filled(9, 0);
+    forEachRow((row, values) {
+      for (int i = 0; i < values.length; i++) {
+        matrix3[i * 3 + row] = values[i].toDouble();
+      }
+    });
+    return matrix3;
+  }
 }
