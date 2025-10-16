@@ -14,7 +14,8 @@ void main() async {
   print(currentFilePath);
   print(currentFileName);
 
-  //print('Hello world: ${opencv.calculate()}!');
+  final tick1 = cv.getTickCount();
+  bgPrint('Hello Opencv:${cv.openCvVersion()} / ${cv.getNumThreads()}');
 
   //读取图片
   final img = cv.imread("FaceQ.png".inputPath, flags: cv.IMREAD_COLOR);
@@ -22,6 +23,8 @@ void main() async {
   final gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY);
   fgPrint("$img width:${img.width}, height:${img.height}");
 
+  //cv.split(m);
+  //cv.merge(m);
   //cv.imshow("test", img);
 
   //保存图片
@@ -32,6 +35,10 @@ void main() async {
   //testDraw();
   //testStitch();
   testPerspective();
+
+  //--
+  final tick2 = cv.getTickCount();
+  bgPrint("end:${(tick2 - tick1) / cv.getTickFrequency()}");
 }
 
 //--
