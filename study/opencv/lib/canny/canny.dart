@@ -74,6 +74,23 @@ void testCanny(cv.Mat image) {
   int index = 0;
   cv.Mat approxMat = cvColorMat(grayMat);
   for (final contour in contours) {
+    // 轮廓面积
+    final area = cv.contourArea(contour);
+    // 轮廓周长
+    final perimeter = cv.arcLength(contour, true);
+
+    //旋转矩形
+    cv.boxPoints(cv.minAreaRect(contour));
+    //cv.circle(cv.minEnclosingCircle(contour));
+    //cv.ellipse(cv.fitEllipse(contour));
+    // 拟合一条线
+    cv.fitLine(contour, cv.DIST_L2, 0, 0.01, 0.01);
+
+
+
+    // 凸包
+    cv.convexHull(contour);
+
     //将点拟合和线
     final approx = cv.approxPolyDP(
       contour,
