@@ -21,7 +21,7 @@ void main() async {
 
   //读取图片
   final img = cv.imread("FaceQ.png".inputPath, flags: cv.IMREAD_COLOR);
-  img.saveAndOpen("output_raw.png");
+  /*img.saveAndOpen("output_raw.png");*/
 
   /*cvGetBMat(img).saveAndOpen("output_b.png");
   cvGetGMat(img).saveAndOpen("output_g.png");
@@ -44,7 +44,8 @@ void main() async {
   //testDraw();
   //testStitch();
   //testPerspective();
-  testSegmentation();
+  //testSegmentation();
+  testCameraCalibration();
 
   //--
   final tick2 = cv.getTickCount();
@@ -167,10 +168,11 @@ void testTemplate(cv.Mat img, cv.Mat templ, {int method = cv.TM_SQDIFF}) {
 }
 
 /// 测试前景/背景分割算法
+/// - 效果不如意
 void testSegmentation() {
   final img = cvLoadMat("backgroundSubtractor.png".inputPath);
   fgPrint("$img width:${img.width}, height:${img.height}");
-  final mog = cv.createBackgroundSubtractorMOG2(
+  /*final mog = cv.createBackgroundSubtractorMOG2(
     varThreshold: 250,
     detectShadows: true,
   );
@@ -179,8 +181,75 @@ void testSegmentation() {
     res,
     cv.MORPH_OPEN,
     cv.getStructuringElement(cv.MORPH_ELLIPSE, (3, 3)),
+  );*/
+
+  final knn = cv.BackgroundSubtractorKNN.create(
+    varThreshold: 16,
+    detectShadows: true,
   );
+  cv.Mat res = knn.apply(img.gray);
+
   fgPrint("$res width:${res.width}, height:${res.height}");
 
   res.saveAndOpen("output_mog.png");
+}
+
+/// 测试相机标定/相机校准
+void testCameraCalibration() {
+  //final img = cvLoadMat("calibresult.png".inputPath);
+  final img = cvLoadMat("calibresult_90.png".inputPath);
+
+  List<List<cv.Point3f>> objectPoints = [];
+  List<List<cv.Point2f>> imagePoints = [];
+
+  //final cameraMatrix = cv.Mat.eye(3, 3, cv.CV_64F);
+  //final patternSize = (7, 6); //网格尺寸
+  final patternSize = (8, 6); //网格尺寸
+
+  List<cv.Point3f> objectPoints2 = [];
+  for (var r = 0; r < patternSize.$2; r++) {
+    for (var c = 0; c < patternSize.$1; c++) {
+      objectPoints2.add(cv.Point3f(r * 10, c * 10, 0));
+      // objectPoints2.add(cv.Point3f(r + 0.0, c + 0.0, 0));
+    }
+  }
+  objectPoints.add(objectPoints2);
+
+  //查找棋盘格角点
+  final (bool success, cv.VecPoint2f corners) = cv.findChessboardCorners(
+    img.gray,
+    patternSize,
+  );
+  fgPrint(corners.toList(), 90);
+  //细化角点位置, 增加准确度
+  final corners2 = cv.cornerSubPix(img.gray, corners, (11, 11), (-1, -1));
+  fgPrint(corners2.toList(), 91);
+  imagePoints.add(corners2.toList());
+
+  final res = cv.drawChessboardCorners(img, patternSize, corners2, true);
+  res.saveAndOpen("output_cc.png");
+
+  //获取标定结果
+  final (
+    double rmsErr,
+    cv.Mat cameraMatrix,
+    cv.Mat distCoeffs,
+    cv.Mat rvecs,
+    cv.Mat tvecs,
+  ) = cv.calibrateCamera(
+    cv.Contours3f.fromList(objectPoints),
+    cv.Contours2f.fromList(imagePoints),
+    patternSize,
+    cv.Mat.empty(),
+    cv.Mat.empty(),
+  );
+  //distCoeffs:Mat(addr=0x6000012e88c0, type=CV_64FC1, rows=1, cols=5, channels=1) [[-0.7881097007309008, 2.8231170733523783, 0.02692497935255397, 0.08256194583654793, -7.601687967063381]]
+  //cameraMatrix:Mat(addr=0x6000012e8890, type=CV_64FC1, rows=3, cols=3, channels=1) [[802.4764753450518, 0.0, 12.792931450932988], [0.0, 1934.0012961748434, -14.44565026590872], [0.0, 0.0, 1.0]]
+  fgPrint("distCoeffs:$distCoeffs ${distCoeffs.toList()}");
+  fgPrint("cameraMatrix:$cameraMatrix ${cameraMatrix.toList()}");
+
+  //去畸变
+  final test = cvLoadMat("left12.jpg".inputPath);
+  final undistorted = cv.undistort(test, cameraMatrix, distCoeffs);
+  undistorted.saveAndOpen("output_test.png");
 }
