@@ -21,15 +21,11 @@ void main() async {
 
   //读取图片
   final img = cv.imread("FaceQ.png".inputPath, flags: cv.IMREAD_COLOR);
-  cvSaveMat("output_raw.png".outputPath, img);
-  openFile("output_raw.png".outputPath);
+  img.saveAndOpen("output_raw.png");
 
-  cvSaveMat("output_b.png".outputPath, cvGetBMat(img));
-  openFile("output_b.png".outputPath);
-  cvSaveMat("output_g.png".outputPath, cvGetGMat(img));
-  openFile("output_g.png".outputPath);
-  cvSaveMat("output_r.png".outputPath, cvGetRMat(img));
-  openFile("output_r.png".outputPath);
+  /*cvGetBMat(img).saveAndOpen("output_b.png");
+  cvGetGMat(img).saveAndOpen("output_g.png");
+  cvGetRMat(img).saveAndOpen("output_r.png");*/
 
   //图片颜色空间转换
   final gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY);
@@ -47,7 +43,8 @@ void main() async {
   //await testDnn();
   //testDraw();
   //testStitch();
-  testPerspective();
+  //testPerspective();
+  testSegmentation();
 
   //--
   final tick2 = cv.getTickCount();
@@ -72,8 +69,7 @@ void testDraw() {
   openFile("output_b.png".outputPath);*/
 
   final testMat = cvFilterMat(mat, 5);
-  cvSaveMat("output.png".outputPath, testMat);
-  openFile("output.png".outputPath);
+  testMat.saveAndOpen("output.png");
 
   /*debugger();
   mat.forEachPixel((row, col, pixel) {
@@ -100,8 +96,7 @@ void testDraw() {
     1,
     cv.Scalar.red,
   );
-  cvSaveMat("output_draw.png".outputPath, mat);
-  openFile("output_draw.png".outputPath);
+  mat.saveAndOpen("output_draw.png");
 }
 
 /// 测试图片拼接
@@ -115,8 +110,7 @@ void testStitch() {
   }
   //debugger();
   final output = cvStitchMat(images);
-  cvSaveMat("output_stitch.png".outputPath, output);
-  openFile("output_stitch.png".outputPath);
+  output?.saveAndOpen("output_stitch.png");
 }
 
 /// 测试透视变换
@@ -170,4 +164,23 @@ void testTemplate(cv.Mat img, cv.Mat templ, {int method = cv.TM_SQDIFF}) {
   //cv.cornerSubPix(image, corners, winSize, zeroZone)
   //cv.dilate(image, corners, winSize, zeroZone) //膨胀
   //cv.erode(image, corners, winSize, zeroZone) //腐蚀
+}
+
+/// 测试前景/背景分割算法
+void testSegmentation() {
+  final img = cvLoadMat("backgroundSubtractor.png".inputPath);
+  fgPrint("$img width:${img.width}, height:${img.height}");
+  final mog = cv.createBackgroundSubtractorMOG2(
+    varThreshold: 250,
+    detectShadows: true,
+  );
+  cv.Mat res = mog.apply(img.gray);
+  res = cv.morphologyEx(
+    res,
+    cv.MORPH_OPEN,
+    cv.getStructuringElement(cv.MORPH_ELLIPSE, (3, 3)),
+  );
+  fgPrint("$res width:${res.width}, height:${res.height}");
+
+  res.saveAndOpen("output_mog.png");
 }

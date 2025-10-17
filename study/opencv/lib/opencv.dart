@@ -360,4 +360,9 @@ extension MatEx on cv.Mat {
     });
     return matrix3;
   }
+
+  /// 转成灰度图片
+  cv.Mat get gray {
+    return cv.cvtColor(this, cv.COLOR_BGR2GRAY);
+  }
 }
