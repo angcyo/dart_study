@@ -2,9 +2,10 @@
 
 https://docs.opencv.org/4.x/index.html
 
-## OpenCV Python Tutorials
+- [OpenCV Python Tutorials](https://opencv-python-tutorials.readthedocs.io/zh/latest/)
+- [OpenCV 教程](https://www.runoob.com/opencv/opencv-tutorial.html)
 
-https://opencv-python-tutorials.readthedocs.io/zh/latest/
+- [flutter_opencv_demo](https://github.com/angcyo/flutter_opencv_demo)
 
 ## dartcv
 

@@ -135,9 +135,39 @@ void testPerspective() {
       cv.Point2f(20, 160),
     ],
   );
+  //cv.normalize(mat);
   //[[0.8922067941243021, 0.014188208530941089, 8.176286297216732],
   // [-0.03583605628807173, 0.9391478601047357, 8.216367882118266],
   // [-0.00010755186200365007, -0.000048519939015975823, 1.0]]
   fgPrint("$mat ${mat.toList()}");
   fgPrint("${mat.matrix3}");
+}
+
+/// 测试模板匹配
+/// All the 6 methods for comparison in a list
+/// - [cv.TM_CCOEFF]
+/// - [cv.TM_CCORR]
+/// - [cv.TM_CCOEFF_NORMED] .
+/// - [cv.TM_SQDIFF]        .
+/// - [cv.TM_SQDIFF_NORMED]
+///
+/// https://opencv-python-tutorials.readthedocs.io/zh/latest/4.%20OpenCV%E4%B8%AD%E7%9A%84%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/4.12.%20%E6%A8%A1%E6%9D%BF%E5%8C%B9%E9%85%8D/
+void testTemplate(cv.Mat img, cv.Mat templ, {int method = cv.TM_SQDIFF}) {
+  final res = cv.matchTemplate(img, templ, method);
+  final (minVal, maxVal, minLoc, maxLoc) = cv.minMaxLoc(res);
+  print("minVal: $minVal, minLoc: $minLoc");
+  print("maxVal: $maxVal, maxLoc: $maxLoc");
+  final left = minLoc.x;
+  final top = minLoc.y;
+  final width = templ.width;
+  final height = templ.height;
+  cv.rectangle(
+    img,
+    cv.Rect(left, top, width, height),
+    cv.Scalar.red,
+    thickness: 2,
+  );
+  //cv.cornerSubPix(image, corners, winSize, zeroZone)
+  //cv.dilate(image, corners, winSize, zeroZone) //膨胀
+  //cv.erode(image, corners, winSize, zeroZone) //腐蚀
 }
