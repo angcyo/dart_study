@@ -4,5 +4,5 @@
 set +x
 
 git add .
-git commit -a -m "+ opencv res"
+git commit -a -m "* fix opencv test"
 git push origin
