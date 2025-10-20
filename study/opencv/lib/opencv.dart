@@ -63,7 +63,7 @@ cv.Mat cvLoadMat(String filePath, {int flags = cv.IMREAD_COLOR}) {
   return cv.imread(filePath, flags: flags);
 }
 
-/// 解码图片
+/// 解码图片, 从内存中读取图片[cv.Mat]
 cv.Mat cvImgDecodeMat(Uint8List bytes, {int flags = cv.IMREAD_COLOR}) {
   return cv.imdecode(bytes, flags);
 }
